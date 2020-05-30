@@ -1,0 +1,32 @@
+{
+  "name": "easylog",
+  "version": "0.1.0",
+  "description": "Easylog is a simple logging framework without runtime devDependencies for node.js and the browser.",
+  "main": "src/easylog.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "lint": "npx eslint ./src/*",
+    "docs": "npx jsdoc ./src/easylog.js -d ./docs"
+  },
+  "keywords": [
+    "logging",
+    "log",
+    "no devDependencies"
+  ],
+  "author": "Lukas Krickl",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^7.1.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jsdoc": "^3.6.4",
+    "mocha": "^7.2.0"
+  },
+  "dependencies": {},
+  "type": "module"
+}
