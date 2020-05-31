@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { EasyLogStreamBase, ColorString, EasyLog } from '../src/easylog.js';
+import { EasyLogStreamBase, ColorString, EasyLog } from '../src/wrapper.mjs';
 
 describe('ColorString', () => {
     describe('String chaining', () => {

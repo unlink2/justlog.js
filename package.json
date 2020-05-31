@@ -4,6 +4,10 @@
   "description": "Easylog is a simple logging framework without runtime devDependencies for node.js and the browser.",
   "main": "./src/easylog.js",
   "module": "./src/wrapper.js",
+  "exports": {
+    "import": "./src/wrapper.mjs",
+    "require": "./src/easylog.js"
+  },
   "scripts": {
     "test": "mocha --reporter spec",
     "lint": "npx eslint ./src/*",
