@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>EasyLog.js HTML example</title>
+  </head>
+
+  <body>
+      <h1>EasyLog.js HTML example</h1>
+      <p>Open console to see output</p>
+      <script src="../dist/easylog.main.min.js"></script>
+      <script>
+        /**
+        * Create a logger without color
+        */
+        const logger = new easylog.EasyLog('Example Logger', easylog.EasyLog.LEVEL_INFO,
+            new easylog.EasyLogConsoleStream({color: false}));
+
+        // debug should not output anything
+        logger.debug('Debug output!');
+        logger.info('Info output!');
+        logger.crit('Critical output!');
+        logger.warning('Warning outpu!');
+      </script>
+  </body>
+</html>
