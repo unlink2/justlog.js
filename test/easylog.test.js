@@ -76,10 +76,10 @@ describe('Stream', () => {
     describe('Mock stream', () => {
         it('should listen to all levels', () => {
             let b = new EasyLogStreamBase();
-            b.write(EasyLogStreamBase.LEVEL_INFO, 'test', 'message', new Date(0));
+            b.write(EasyLog.LEVEL_INFO, 'test', 'message', new Date(0));
             assert.equal(b.output, '\x1B[0m\x1B[37mThu, 01 Jan 1970 00:00:00 GMT [info] [test] message\x1B[0m');
 
-            b.write(EasyLogStreamBase.LEVEL_FATAL, 'test', 'fatal', new Date(1));
+            b.write(EasyLog.LEVEL_FATAL, 'test', 'fatal', new Date(1));
             assert.equal(b.output, '\x1B[0m\x1B[41m\x1B[1mThu, 01 Jan 1970 00:00:00 GMT [fatal] [test] fatal\x1B[0m');
         });
     });
@@ -88,29 +88,39 @@ describe('Stream', () => {
 describe('Logger', () => {
     describe('Logger with mock stream', () => {
         it('Should not log levels below the current level', () => {
-            let l = new EasyLog('name', EasyLogStreamBase.LEVEL_ERROR, new EasyLogStreamBase({color: false}));
+            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStreamBase({color: false}));
             // should not log these
-            for (let i = EasyLogStreamBase.LEVEL_INFO; i < EasyLogStreamBase.LEVEL_ERROR; i++) {
+            for (let i = EasyLog.LEVEL_INFO; i < EasyLog.LEVEL_ERROR; i++) {
                 assert(!l.isMinLevel(i));
             }
             // should log these levels
-            for (let i = EasyLogStreamBase.LEVEL_ERROR; i <= EasyLogStreamBase.LEVEL_DEBUG; i++)  {
+            for (let i = EasyLog.LEVEL_ERROR; i <= EasyLog.LEVEL_DEBUG; i++)  {
                 assert(l.isMinLevel(i));
             }
             // test output
-            l.debug('test');
-            assert.equal(l.stream.output, '');
-            l.info('test');
-            assert.equal(l.stream.output, '');
-            l.warning('test');
-            assert.equal(l.stream.output, '');
+            assert.equal(l.debug('test'), l);
+            assert.equal(l.streams[0].output, '');
+            assert.equal(l.info('test'), l);
+            assert.equal(l.streams[0].output, '');
+            assert.equal(l.warning('test'), l);
+            assert.equal(l.streams[0].output, '');
+            assert.equal(l.error('test'), l);
+            assert.notEqual(l.streams[0].output, '');
+            assert.equal(l.crit('test'), l);
+            assert.notEqual(l.streams[0].output, '');
+            assert.equal(l.fatal('test'), l);
+            assert(!l.streams[0].color.allowColor);
+            assert.notEqual(l.streams[0].output, '');
+        });
+
+        it('Should write to all streams', () => {
+            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStreamBase({color: false}));
+            l.addStream(new EasyLogStreamBase({color: false})); // second stream
             l.error('test');
-            assert.notEqual(l.stream.output, '');
-            l.crit('test');
-            assert.notEqual(l.stream.output, '');
-            l.fatal('test');
-            assert(!l.stream.color.allowColor);
-            assert.notEqual(l.stream.output, '');
+            assert.notEqual(l.streams[0].output, '');
+            assert.equal(l.streams[1].output, l.streams[0].output);
+            l.info('testing');
+            assert.equal(l.streams[1].output, l.streams[0].output);
         });
     });
 });

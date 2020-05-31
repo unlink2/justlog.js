@@ -15,6 +15,7 @@ export class ColorString {
     /**
      * Appends a value to the current output buffer
      * @param {String} str The string
+     * @return {ColorString}
      */
     append(str) {
         this.str += str;
@@ -24,6 +25,7 @@ export class ColorString {
     /**
      * Appends a color to the current string
      * @param {String} cStr The color string
+     * @return {ColorString}
      */
     appendColor(cStr) {
         if (this.allowColor) {
@@ -33,6 +35,7 @@ export class ColorString {
 
     /**
      * Resets terminal to default
+     * @return {ColorString}
      */
     reset() {
         this.appendColor(ColorString.termColors.reset);
@@ -41,6 +44,7 @@ export class ColorString {
 
     /**
      * Sets font to bright mode
+     * @return {ColorString}
      */
     bright() {
         this.appendColor(ColorString.termColors.bright);
@@ -49,6 +53,7 @@ export class ColorString {
 
     /**
      * Sets font to dim mode
+     * @return {ColorString}
      */
     dim() {
         this.appendColor(ColorString.termColors.dim);
@@ -57,6 +62,7 @@ export class ColorString {
 
     /**
      * Sets font to underscore mode
+     * @return {ColorString}
      */
     underscore() {
         this.appendColor(ColorString.termColors.underscore);
@@ -65,6 +71,7 @@ export class ColorString {
 
     /**
      * Sets font to blink mode
+     * @return {ColorString}
      */
     blink() {
         this.appendColor(ColorString.termColors.blink);
@@ -73,6 +80,7 @@ export class ColorString {
 
     /**
      * Reverses foreground and background colors
+     * @return {ColorString}
      */
     reverse() {
         this.appendColor(ColorString.termColors.reverse);
@@ -81,6 +89,7 @@ export class ColorString {
 
     /**
      * Enables hidden mode
+     * @return {ColorString}
      */
     hidden() {
         this.appendColor(ColorString.termColors.reverse);
@@ -90,6 +99,7 @@ export class ColorString {
     /**
      * Sets color to black
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     black(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgBlack : ColorString.termColors.fgBlack);
@@ -99,6 +109,7 @@ export class ColorString {
     /**
      * Sets color to red
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     red(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgRed : ColorString.termColors.fgRed);
@@ -109,6 +120,7 @@ export class ColorString {
     /**
      * Sets color to green
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     green(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgGreen : ColorString.termColors.fgGreen);
@@ -119,6 +131,7 @@ export class ColorString {
     /**
      * Sets color to yellow
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     yellow(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgYellow : ColorString.termColors.fgYellow);
@@ -129,6 +142,7 @@ export class ColorString {
     /**
      * Sets color to blue
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     blue(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgBlue : ColorString.termColors.fgBlue);
@@ -139,6 +153,7 @@ export class ColorString {
     /**
      * Sets color to magenta
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     magenta(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgMagenta : ColorString.termColors.fgMagenta);
@@ -149,6 +164,7 @@ export class ColorString {
     /**
      * Sets color to cyan
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     cyan(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgCyan : ColorString.termColors.fgCyan);
@@ -158,6 +174,7 @@ export class ColorString {
     /**
      * Sets color to white
      * @param {Bool} bg Background color (default false)
+     * @return {ColorString}
      */
     white(bg=false) {
         this.appendColor(bg ? ColorString.termColors.bgWhite : ColorString.termColors.fgWhite);
@@ -229,19 +246,19 @@ export class EasyLogStreamBase {
     colorPicker(level) {
         // choose color
         switch (level) {
-            case EasyLogStreamBase.LEVEL_INFO:
+            case EasyLog.LEVEL_INFO:
                 this.color.white();
                 break;
-            case EasyLogStreamBase.LEVEL_WARNING:
+            case EasyLog.LEVEL_WARNING:
                 this.color.yellow();
                 break;
-            case EasyLogStreamBase.LEVEL_ERROR:
+            case EasyLog.LEVEL_ERROR:
                 this.color.red(true);
                 break;
-            case EasyLogStreamBase.LEVEL_CRITICAL:
+            case EasyLog.LEVEL_CRITICAL:
                 this.color.red(true);
                 break;
-            case EasyLogStreamBase.LEVEL_FATAL:
+            case EasyLog.LEVEL_FATAL:
                 this.color.red(true);
                 this.color.bright();
                 break;
@@ -275,30 +292,6 @@ export class EasyLogStreamBase {
         this.output = this.color.str;
     }
 }
-/**
- * {Number} LEVEL_DEBUG Debug log level
- */
-EasyLogStreamBase.LEVEL_DEBUG = 0;
-/**
- * {Number} LEVEL_INFO Info log level
- */
-EasyLogStreamBase.LEVEL_INFO = 1;
-/**
- * {Number} LEVEL_WARNING Warning log level
- */
-EasyLogStreamBase.LEVEL_WARNING = 2;
-/**
- * {Number} LEVEL_ERROR Error log level
- */
-EasyLogStreamBase.LEVEL_ERROR = 3;
-/**
- * {Number} LEVEL_CRITICAL Ciritcal log level
- */
-EasyLogStreamBase.LEVEL_CRITICAL = 4;
-/**
- * {Number} LEVEL_FATAL Fatal log level
- */
-EasyLogStreamBase.LEVEL_FATAL = 5;
 
 /**
  * @class EasyLogConsoleStream Console output logger
@@ -321,9 +314,9 @@ export class EasyLogConsoleStream extends EasyLogStreamBase {
      */
     write(level, name, message, time=new Date()) {
         super.write(level, name, message, time);
-        if (level < EasyLogConsoleStream.LEVEL_WARNING) {
+        if (level < EasyLog.LEVEL_WARNING) {
             console.log(this.output);
-        } else if (level < EasyLogConsoleStream.LEVEL_ERROR) {
+        } else if (level < EasyLog.LEVEL_ERROR) {
             console.warning(this.output);
         } else {
             console.error(this.output);
@@ -339,12 +332,20 @@ export class EasyLog {
      * @constructor
      * @param {string} name The name of the logger
      * @param {Number} minLevel The current log level
-     * @param {Object} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
+     * @param {EasyLogStreamBase} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
      */
-    constructor(name, minLevel=EasyLogStreamBase.LEVEL_ERROR, stream=new EasyLogConsoleStream()) {
+    constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream()) {
         this.name = name;
         this.minLevel = minLevel;
-        this.stream = stream;
+        this.streams = [stream];
+    }
+
+    /**
+     * Add a new stream to this logger
+     * @param {Object} stream The stream
+     */
+    addStream(stream) {
+        this.streams.push(stream);
     }
 
     /**
@@ -365,56 +366,96 @@ export class EasyLog {
         if (!this.isMinLevel(level)) {
             return;
         }
-        this.stream.write(level, this.name, message);
+        for (let stream of this.streams) {
+            stream.write(level, this.name, message);
+        }
     }
 
     /**
      * Outputs info log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     info(message) {
-        this. output(EasyLogStreamBase.LEVEL_INFO, message);
+        this. output(EasyLog.LEVEL_INFO, message);
+        return this;
     }
 
     /**
      * Outputs warning log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     warning(message) {
-        this.output(EasyLogStreamBase.LEVEL_WARNING, message);
+        this.output(EasyLog.LEVEL_WARNING, message);
+        return this;
     }
 
 
     /**
      * Outputs error log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     error(message) {
-        this.output(EasyLogStreamBase.LEVEL_ERROR, message);
+        this.output(EasyLog.LEVEL_ERROR, message);
+        return this;
     }
 
     /**
      * Outputs ciritcal log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     crit(message) {
-        this.output(EasyLogStreamBase.LEVEL_CRITICAL, message);
+        this.output(EasyLog.LEVEL_CRITICAL, message);
+        return this;
     }
 
     /**
      * Outputs fatal log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     fatal(message) {
-        this.output(EasyLogStreamBase.LEVEL_FATAL, message);
+        this.output(EasyLog.LEVEL_FATAL, message);
+        return this;
     }
 
 
     /**
      * Outputs debug log level
      * @param {String} message The message
+     * @return {EasyLog}
      */
     debug(message) {
-        this.output(EasyLogStreamBase.LEVEL_DEBUG, message);
+        this.output(EasyLog.LEVEL_DEBUG, message);
+        return this;
     }
 }
+/**
+ * {Number} LEVEL_DEBUG Debug log level
+ */
+EasyLog.LEVEL_DEBUG = 0;
+/**
+ * {Number} LEVEL_INFO Info log level
+ */
+EasyLog.LEVEL_INFO = 1;
+/**
+ * {Number} LEVEL_WARNING Warning log level
+ */
+EasyLog.LEVEL_WARNING = 2;
+/**
+ * {Number} LEVEL_ERROR Error log level
+ */
+EasyLog.LEVEL_ERROR = 3;
+/**
+ * {Number} LEVEL_CRITICAL Ciritcal log level
+ */
+EasyLog.LEVEL_CRITICAL = 4;
+/**
+ * {Number} LEVEL_FATAL Fatal log level
+ */
+EasyLog.LEVEL_FATAL = 5;
+
+
