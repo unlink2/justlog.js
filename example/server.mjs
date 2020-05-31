@@ -3,7 +3,7 @@
  * EasyLog.js node.js example
  */
 
-const EasyLog = require('../src/easylog.js').EasyLog;
+import {EasyLog} from '../src/wrapper.mjs'
 
 /**
  * Create a new logger with color.

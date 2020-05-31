@@ -91,15 +91,9 @@ var easylog =
 /*!************************!*\
   !*** ./src/easylog.js ***!
   \************************/
-/*! exports provided: ColorString, EasyLogStreamBase, EasyLogConsoleStream, EasyLog */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ColorString", function() { return ColorString; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EasyLogStreamBase", function() { return EasyLogStreamBase; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EasyLogConsoleStream", function() { return EasyLogConsoleStream; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EasyLog", function() { return EasyLog; });
 /**
  * @class ColorString A basic class that enables color formatted output to
  * the command line
@@ -560,7 +554,7 @@ EasyLog.LEVEL_CRITICAL = 4;
  */
 EasyLog.LEVEL_FATAL = 5;
 
-
+module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStreamBase};
 
 
 /***/ })

@@ -2,7 +2,7 @@
  * @class ColorString A basic class that enables color formatted output to
  * the command line
  */
-export class ColorString {
+class ColorString {
     /**
      * @constructor
      * @param {Bool} allowColor Enables color mode
@@ -228,7 +228,7 @@ ColorString.termColors = {
  * Base class for streams.
  * Use it as a base to create your own logger output stream.
  */
-export class EasyLogStreamBase {
+class EasyLogStreamBase {
     /**
      * @constructor
      * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
@@ -296,7 +296,7 @@ export class EasyLogStreamBase {
 /**
  * @class EasyLogConsoleStream Console output logger
  */
-export class EasyLogConsoleStream extends EasyLogStreamBase {
+class EasyLogConsoleStream extends EasyLogStreamBase {
     /**
      * @constructor
      * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
@@ -327,7 +327,7 @@ export class EasyLogConsoleStream extends EasyLogStreamBase {
 /**
  * @class EasyLog Logger class
  */
-export class EasyLog {
+class EasyLog {
     /**
      * @constructor
      * @param {string} name The name of the logger
@@ -458,4 +458,4 @@ EasyLog.LEVEL_CRITICAL = 4;
  */
 EasyLog.LEVEL_FATAL = 5;
 
-
+module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStreamBase};

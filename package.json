@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Easylog is a simple logging framework without runtime devDependencies for node.js and the browser.",
   "main": "./src/easylog.js",
+  "module": "./src/wrapper.js",
   "scripts": {
     "test": "mocha --reporter spec",
     "lint": "npx eslint ./src/*",
@@ -26,6 +27,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
     "gulp-eslint": "^6.0.0",
     "gulp-header": "^2.0.9",
     "gulp-mocha": "^7.0.2",
@@ -36,6 +38,5 @@
     "mocha": "^7.2.0",
     "webpack-stream": "^5.2.1"
   },
-  "dependencies": {},
-  "type": "module"
+  "dependencies": {}
 }
