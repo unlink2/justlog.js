@@ -221,6 +221,11 @@ ColorString.termColors = {
     bgWhite: '\x1b[47m',
 };
 
+/**
+ * @typedef {Object} StreamOptions
+ * @property {Array} levels The log level names
+ * @property {Bool} color Enable Colors. Defaults to true
+ */
 
 
 /**
@@ -231,7 +236,7 @@ ColorString.termColors = {
 class EasyLogStreamBase {
     /**
      * @constructor
-     * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
+     * @param {StreamOptions} options The options object.
      */
     constructor(options={}) {
         this.levels = options.levels || ['debug', 'info', 'warning', 'error', 'critical', 'fatal'];
@@ -299,7 +304,7 @@ class EasyLogStreamBase {
 class EasyLogConsoleStream extends EasyLogStreamBase {
     /**
      * @constructor
-     * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
+     * @param {StreamOptions} options The options object.
      */
     constructor(options) {
         super(options);
