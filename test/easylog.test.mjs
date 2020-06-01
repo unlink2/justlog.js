@@ -82,6 +82,26 @@ describe('Stream', () => {
             b.write(EasyLog.LEVEL_FATAL, 'test', 'fatal', new Date(1));
             assert.equal(b.output, '\x1B[0m\x1B[41m\x1B[1mThu, 01 Jan 1970 00:00:00 GMT [fatal] [test] fatal\x1B[0m');
         });
+
+        it('Should use custom date formatters', () => {
+            let b = new EasyLogStreamBase({dateFormatter: (time, stream) => {
+                assert.equal(stream, b);
+                return 'My fancy date formatter';
+            }});
+
+            assert.equal(b.dateFormatter(new Date(100)), 'My fancy date formatter');
+
+        });
+
+        it('Should use a custom message formatter', () => {
+            let b = new EasyLogStreamBase({messageFormatter: (level, name, message, time, stream) => {
+                assert.equal(stream, b);
+                return `${level} ${name} ${message} ${time.toUTCString()}`;
+            }});
+
+            assert.equal(b.write(2, 'test name', 'test message', new Date(100)),
+                '2 test name test message Thu, 01 Jan 1970 00:00:00 GMT');
+        });
     });
 });
 

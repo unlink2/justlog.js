@@ -11,7 +11,7 @@
   "scripts": {
     "test": "mocha --reporter spec",
     "lint": "npx eslint ./src/*",
-    "docs": "npx jsdoc ./src/easylog.js -d ./docs",
+    "docs": "npx jsdoc ./src/easylog.js -d ./docs -R README.md",
     "dist": "npx gulp -f gulpfile.cjs dev dist"
   },
   "keywords": [
