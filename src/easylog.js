@@ -227,7 +227,7 @@ ColorString.termColors = {
 /**
  * @callback StreamDateFormatter
  * @param {Date} time The current time
- * @param {EasyLogStreamBase} stream The calling stream
+ * @param {EasyLogStream} stream The calling stream
  * @return {String} The formatted date string
  */
 
@@ -237,7 +237,7 @@ ColorString.termColors = {
  * @param {String} name The origin of the log
  * @param {String} message The actual log message
  * @param {Date} time Time (defaults to current time)
- * @param {EasyLogStreamBase} stream The calling stream
+ * @param {EasyLogStream} stream The calling stream
  * @return {String} The formatted message
  */
 
@@ -252,11 +252,11 @@ ColorString.termColors = {
 
 
 /**
- * @class EasyLogStreamBase
+ * @class EasyLogStream
  * Base class for streams.
  * Use it as a base to create your own logger output stream.
  */
-class EasyLogStreamBase {
+class EasyLogStream {
     /**
      * @constructor
      * @param {StreamOptions} options The options object.
@@ -354,7 +354,7 @@ class EasyLogStreamBase {
 /**
  * @class EasyLogConsoleStream Console output logger
  */
-class EasyLogConsoleStream extends EasyLogStreamBase {
+class EasyLogConsoleStream extends EasyLogStream {
     /**
      * @constructor
      * @param {StreamOptions} options The options object.
@@ -393,7 +393,7 @@ class EasyLog {
      * @constructor
      * @param {string} name The name of the logger
      * @param {Number} minLevel The current log level
-     * @param {EasyLogStreamBase} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
+     * @param {EasyLogStream} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
      */
     constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream()) {
         this.name = name;
@@ -519,4 +519,4 @@ EasyLog.LEVEL_CRITICAL = 4;
  */
 EasyLog.LEVEL_FATAL = 5;
 
-module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStreamBase};
+module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStream};

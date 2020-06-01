@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { EasyLogStreamBase, ColorString, EasyLog } from '../src/wrapper.mjs';
+import { EasyLogStream, ColorString, EasyLog } from '../src/wrapper.mjs';
 
 describe('ColorString', () => {
     describe('String chaining', () => {
@@ -75,7 +75,7 @@ describe('ColorString', () => {
 describe('Stream', () => {
     describe('Mock stream', () => {
         it('should listen to all levels', () => {
-            let b = new EasyLogStreamBase();
+            let b = new EasyLogStream();
             b.write(EasyLog.LEVEL_INFO, 'test', 'message', new Date(0));
             assert.equal(b.output, '\x1B[0m\x1B[37mThu, 01 Jan 1970 00:00:00 GMT [info] [test] message\x1B[0m');
 
@@ -84,7 +84,7 @@ describe('Stream', () => {
         });
 
         it('Should use custom date formatters', () => {
-            let b = new EasyLogStreamBase({dateFormatter: (time, stream) => {
+            let b = new EasyLogStream({dateFormatter: (time, stream) => {
                 assert.equal(stream, b);
                 return 'My fancy date formatter';
             }});
@@ -94,7 +94,7 @@ describe('Stream', () => {
         });
 
         it('Should use a custom message formatter', () => {
-            let b = new EasyLogStreamBase({messageFormatter: (level, name, message, time, stream) => {
+            let b = new EasyLogStream({messageFormatter: (level, name, message, time, stream) => {
                 assert.equal(stream, b);
                 return `${level} ${name} ${message} ${time.toUTCString()}`;
             }});
@@ -108,7 +108,7 @@ describe('Stream', () => {
 describe('Logger', () => {
     describe('Logger with mock stream', () => {
         it('Should not log levels below the current level', () => {
-            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStreamBase({color: false}));
+            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({color: false}));
             // should not log these
             for (let i = EasyLog.LEVEL_INFO; i < EasyLog.LEVEL_ERROR; i++) {
                 assert(!l.isMinLevel(i));
@@ -134,8 +134,8 @@ describe('Logger', () => {
         });
 
         it('Should write to all streams', () => {
-            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStreamBase({color: false}));
-            l.addStream(new EasyLogStreamBase({color: false})); // second stream
+            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({color: false}));
+            l.addStream(new EasyLogStream({color: false})); // second stream
             l.error('test');
             assert.notEqual(l.streams[0].output, '');
             assert.equal(l.streams[1].output, l.streams[0].output);
