@@ -94,12 +94,15 @@ describe('Stream', () => {
         });
 
         it('Should use a custom message formatter', () => {
-            let b = new EasyLogStream({messageFormatter: (level, name, message, time, stream) => {
+            let b = new EasyLogStream({messageFormatter: (level, name, message, time, args, stream) => {
                 assert.equal(stream, b);
+                assert.equal(typeof args, 'object');
+                assert.equal(args.length, 1);
+                assert.equal(args[0], message);
                 return `${level} ${name} ${message} ${time.toUTCString()}`;
             }});
 
-            assert.equal(b.write(2, 'test name', 'test message', new Date(100)),
+            assert.equal(b.write(2, 'test name', 'test message', new Date(100), ['test message']),
                 '2 test name test message Thu, 01 Jan 1970 00:00:00 GMT');
         });
     });
@@ -141,6 +144,13 @@ describe('Logger', () => {
             assert.equal(l.streams[1].output, l.streams[0].output);
             l.info('testing');
             assert.equal(l.streams[1].output, l.streams[0].output);
+        });
+
+        it('Should pretty print Objects', () => {
+            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({dateFormatter: () => {return '';}}),
+                {prettyPrintSpace: 0});
+            l.error('Test', {value: 255});
+            assert.equal(l.streams[0].output, '\x1B[0m\x1B[31m [error] [name]  Test {"value":255}\x1B[0m');
         });
     });
 });

@@ -40,17 +40,17 @@ logger.warning('This is a warning!');
 
 EasyLog can also be included in the browser with the pre-built minified scripts.
 ```html
-      <script src="./dist/easylog.main.min.js"></script>
-      <script>
-        /**
-        * Create a logger without color
-        */
-        const logger = new easylog.EasyLog('My Loggger', easylog.EasyLog.LEVEL_INFO,
-            new easylog.EasyLogConsoleStream({color: false}));
+<script src="./dist/easylog.main.min.js"></script>
+<script>
+  /**
+  * Create a logger without color
+  */
+  const logger = new easylog.EasyLog('My Loggger', easylog.EasyLog.LEVEL_INFO,
+      new easylog.EasyLogConsoleStream({color: false}));
 
-        // debug should not output anything
-        logger.warning('This is a warning!');
-      </script>
+  // debug should not output anything
+  logger.warning('This is a warning!');
+</script>
 ```
 
 ## Examples

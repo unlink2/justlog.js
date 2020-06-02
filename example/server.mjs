@@ -28,7 +28,7 @@ const customLogger = new EasyLog('Custom Logger', EasyLog.LEVEL_INFO,
     /**
      * The original stream is exposed via the stream object
      */
-    new EasyLogConsoleStream({messageFormatter: (level, name, message, time, stream) => {
+    new EasyLogConsoleStream({messageFormatter: (level, name, message, time, args, stream) => {
         return stream.color
             .yellow().append(`{${stream.dateFormatter(time)}} [${stream.levels[level]}, ${name}] ${message}`).reset().str;
     }}));

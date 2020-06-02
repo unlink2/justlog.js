@@ -284,9 +284,11 @@ class ColorString {
 
     /**
      * Clears the current string buffer
+     * @returns {ColorString}
      */
     clear() {
         this.str = '';
+        return this;
     }
 }
 ColorString.termColors = {
@@ -318,21 +320,49 @@ ColorString.termColors = {
 };
 
 
+/**
+ * @callback StreamDateFormatter
+ * @param {Date} time The current time
+ * @param {EasyLogStream} stream The calling stream
+ * @return {String} The formatted date string
+ */
 
 /**
- * @class EasyLogStreamBase
+ * @callback StreamMessageFormatter
+ * @param {Number} level The log level
+ * @param {String} name The origin of the log
+ * @param {String} message The actual log message
+ * @param {Date} time Time (defaults to current time)
+ * @param {EasyLogStream} stream The calling stream
+ * @return {String} The formatted message
+ */
+
+/**
+ * @typedef {Object} StreamOptions
+ * @property {Array} levels The log level names
+ * @property {Bool} color Enable Colors. Defaults to true
+ * @property {StreamDateFormatter} dateFormatter Custom date formatter. By default it will return .toUTCString
+ * @property {StreamMessageFormatter} messageFormatter Custom message formatter.
+ */
+
+
+
+/**
+ * @class EasyLogStream
  * Base class for streams.
  * Use it as a base to create your own logger output stream.
  */
-class EasyLogStreamBase {
+class EasyLogStream {
     /**
      * @constructor
-     * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
+     * @param {StreamOptions} options The options object.
      */
     constructor(options={}) {
         this.levels = options.levels || ['debug', 'info', 'warning', 'error', 'critical', 'fatal'];
         this.output = '';
         this.color = new ColorString(options.color);
+        this._dateFormatter = options.dateFormatter;
+        this.messageFormatter = options.messageFormatter;
     }
 
     /**
@@ -366,17 +396,43 @@ class EasyLogStreamBase {
      * @param {Date} time The current time
      */
     dateFormatter(time) {
+        /**
+         * If time formatter exists do not call default
+         */
+        if (this._dateFormatter) {
+            return this._dateFormatter(time, this);
+        }
         return time.toUTCString();
     }
 
     /**
-     * writes the logged message. Override to log to custom destination
+     * writes the logged message. Calls messageFormatter is defined
      * @param {Number} level The log level
      * @param {String} name The origin of the log
      * @param {String} message The actual log message
      * @param {Date} time Time (defaults to current time)
+     * @return {String} The output
      */
     write(level, name, message, time=new Date()) {
+        /**
+         * If message formatter exists do not invoke default behaviour
+         */
+        if (this.messageFormatter) {
+            this.output = this.messageFormatter(level, name, message, time, this);
+            return this.output;
+        }
+        return this.defaultFormatter(level, name, message, time);
+    }
+
+    /**
+     * The default message formatter.
+     * @param {Number} level The log level
+     * @param {String} name The origin of the log
+     * @param {String} message The actual log message
+     * @param {Date} time Time (defaults to current time)
+     * @return {String} The output
+     */
+    defaultFormatter(level, name, message, time) {
         this.color.clear();
         this.color.reset();
 
@@ -386,16 +442,18 @@ class EasyLogStreamBase {
         this.color.reset();
 
         this.output = this.color.str;
+
+        return this.output;
     }
 }
 
 /**
  * @class EasyLogConsoleStream Console output logger
  */
-class EasyLogConsoleStream extends EasyLogStreamBase {
+class EasyLogConsoleStream extends EasyLogStream {
     /**
      * @constructor
-     * @param {Object} options Options obejct. Keys: {Array} levels -> Log level names, {Bool} color -> allow color
+     * @param {StreamOptions} options The options object.
      */
     constructor(options) {
         super(options);
@@ -407,6 +465,7 @@ class EasyLogConsoleStream extends EasyLogStreamBase {
      * @param {String} name The origin of the log
      * @param {String} message The actual log message
      * @param {Date} time Time (defaults to current time)
+     * @return {String} The output
      */
     write(level, name, message, time=new Date()) {
         super.write(level, name, message, time);
@@ -417,6 +476,8 @@ class EasyLogConsoleStream extends EasyLogStreamBase {
         } else {
             console.error(this.output);
         }
+
+        return this.output;
     }
 }
 
@@ -428,7 +489,7 @@ class EasyLog {
      * @constructor
      * @param {string} name The name of the logger
      * @param {Number} minLevel The current log level
-     * @param {EasyLogStreamBase} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
+     * @param {EasyLogStream} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
      */
     constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream()) {
         this.name = name;
@@ -554,7 +615,7 @@ EasyLog.LEVEL_CRITICAL = 4;
  */
 EasyLog.LEVEL_FATAL = 5;
 
-module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStreamBase};
+module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStream};
 
 
 /***/ })

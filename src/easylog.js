@@ -237,6 +237,7 @@ ColorString.termColors = {
  * @param {String} name The origin of the log
  * @param {String} message The actual log message
  * @param {Date} time Time (defaults to current time)
+ * @param {Array} args The argument objects
  * @param {EasyLogStream} stream The calling stream
  * @return {String} The formatted message
  */
@@ -315,17 +316,18 @@ class EasyLogStream {
      * @param {String} name The origin of the log
      * @param {String} message The actual log message
      * @param {Date} time Time (defaults to current time)
+     * @param {Array} args The arguments array of unformatted obejcts
      * @return {String} The output
      */
-    write(level, name, message, time=new Date()) {
+    write(level, name, message, time=new Date(), args=[]) {
         /**
          * If message formatter exists do not invoke default behaviour
          */
         if (this.messageFormatter) {
-            this.output = this.messageFormatter(level, name, message, time, this);
+            this.output = this.messageFormatter(level, name, message, time, args, this);
             return this.output;
         }
-        return this.defaultFormatter(level, name, message, time);
+        return this.defaultFormatter(level, name, message, time, args);
     }
 
     /**
@@ -334,6 +336,7 @@ class EasyLogStream {
      * @param {String} name The origin of the log
      * @param {String} message The actual log message
      * @param {Date} time Time (defaults to current time)
+     * @param {Array} args The argument objects
      * @return {String} The output
      */
     defaultFormatter(level, name, message, time) {
@@ -369,10 +372,11 @@ class EasyLogConsoleStream extends EasyLogStream {
      * @param {String} name The origin of the log
      * @param {String} message The actual log message
      * @param {Date} time Time (defaults to current time)
+     * @param {Array} args The arguments array of unformatted obejcts
      * @return {String} The output
      */
-    write(level, name, message, time=new Date()) {
-        super.write(level, name, message, time);
+    write(level, name, message, time=new Date(), args=[]) {
+        super.write(level, name, message, time, args);
         if (level < EasyLog.LEVEL_WARNING) {
             console.log(this.output);
         } else if (level < EasyLog.LEVEL_ERROR) {
@@ -386,6 +390,11 @@ class EasyLogConsoleStream extends EasyLogStream {
 }
 
 /**
+ * @typedef {Object} EasyLogOptions
+ * @property {Number} prettyPrintSpace Space for JSON pretty printing
+ */
+
+/**
  * @class EasyLog Logger class
  */
 class EasyLog {
@@ -394,11 +403,13 @@ class EasyLog {
      * @param {string} name The name of the logger
      * @param {Number} minLevel The current log level
      * @param {EasyLogStream} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
+     * @param {EasyLogOptions} options Other options
      */
-    constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream()) {
+    constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream(), options={}) {
         this.name = name;
         this.minLevel = minLevel;
         this.streams = [stream];
+        this.prettyPrintSpace = options.prettyPrintSpace;
     }
 
     /**
@@ -423,12 +434,22 @@ class EasyLog {
      * @param {Number} level The log level
      * @param {String} message The message to output
      */
-    output(level, message) {
+    output(level, args) {
         if (!this.isMinLevel(level)) {
             return;
         }
+        let message = '';
+
+        for (let a of args) {
+            if (typeof a === 'object') {
+                message = `${message} ${JSON.stringify(a, null, this.prettyPrintSpace)}`;
+            } else {
+                message = `${message} ${a}`;
+            }
+        }
+
         for (let stream of this.streams) {
-            stream.write(level, this.name, message);
+            stream.write(level, this.name, message, new Date(), args);
         }
     }
 
@@ -437,8 +458,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    info(message) {
-        this. output(EasyLog.LEVEL_INFO, message);
+    info() {
+        this. output(EasyLog.LEVEL_INFO, arguments);
         return this;
     }
 
@@ -447,8 +468,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    warning(message) {
-        this.output(EasyLog.LEVEL_WARNING, message);
+    warning() {
+        this.output(EasyLog.LEVEL_WARNING, arguments);
         return this;
     }
 
@@ -458,8 +479,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    error(message) {
-        this.output(EasyLog.LEVEL_ERROR, message);
+    error() {
+        this.output(EasyLog.LEVEL_ERROR, arguments);
         return this;
     }
 
@@ -468,8 +489,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    crit(message) {
-        this.output(EasyLog.LEVEL_CRITICAL, message);
+    crit() {
+        this.output(EasyLog.LEVEL_CRITICAL, arguments);
         return this;
     }
 
@@ -478,8 +499,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    fatal(message) {
-        this.output(EasyLog.LEVEL_FATAL, message);
+    fatal() {
+        this.output(EasyLog.LEVEL_FATAL, arguments);
         return this;
     }
 
@@ -489,8 +510,8 @@ class EasyLog {
      * @param {String} message The message
      * @return {EasyLog}
      */
-    debug(message) {
-        this.output(EasyLog.LEVEL_DEBUG, message);
+    debug() {
+        this.output(EasyLog.LEVEL_DEBUG, arguments);
         return this;
     }
 }

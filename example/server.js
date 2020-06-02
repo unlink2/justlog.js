@@ -14,8 +14,8 @@ const logger = new EasyLog('Example Logger', EasyLog.LEVEL_INFO);
 /**
  * Debug messages will not show.
  */
-logger.debug('Debug message');
-logger.info('Info message');
+logger.debug('Debug message', {value: 255});
+logger.info('Info message', {value: 255}, 0);
 logger.error('Error message');
 logger.crit('Critical message');
 logger.fatal('Fatal message');
@@ -28,13 +28,15 @@ const customLogger = new EasyLog('Custom Logger', EasyLog.LEVEL_INFO,
     /**
      * The original stream is exposed via the stream object
      */
-    new EasyLogConsoleStream({messageFormatter: (level, name, message, time, stream) => {
+    new EasyLogConsoleStream({messageFormatter: (level, name, message, time, args, stream) => {
         return stream.color.clear()
-            .yellow().append(`{${stream.dateFormatter(time)}} [${stream.levels[level]}, ${name}] ${message}`).reset().str;
-    }}));
+            .yellow()
+            .append(`{${stream.dateFormatter(time)}} [${stream.levels[level]}, ${name}] ${message} args: ${JSON.stringify(args)}`).reset().str;
+    }}), {prettyPrintSpace: 2});
 
 customLogger.warning('My custom warning!');
 customLogger.error('Custom Error');
+customLogger.info('Logging object: ', {value: 255});
 
 /**
  * Define a custom logger stream class
