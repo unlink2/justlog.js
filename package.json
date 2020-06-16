@@ -1,5 +1,5 @@
 {
-  "name": "easylog",
+  "name": "easylog.js",
   "version": "0.1.0",
   "description": "Easylog is a simple logging framework without runtime devDependencies for node.js and the browser.",
   "main": "./src/easylog.js",
