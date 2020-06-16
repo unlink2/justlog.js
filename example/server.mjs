@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * EasyLog.js node.js example
+ * JustLog.js node.js example
  */
 
-import {EasyLog, EasyLogConsoleStream} from '../src/wrapper.mjs'
+import {JustLog, JustLogConsoleStream} from '../src/wrapper.mjs'
 
 /**
  * Create a new logger with color.
  */
-const logger = new EasyLog('Example Logger', EasyLog.LEVEL_INFO);
+const logger = new JustLog('Example Logger', JustLog.LEVEL_INFO);
 
 /**
  * Debug messages will not show.
@@ -24,11 +24,11 @@ logger.warning('Warning message');
 /**
  * Logger with custom formatter
  */
-const customLogger = new EasyLog('Custom Logger', EasyLog.LEVEL_INFO,
+const customLogger = new JustLog('Custom Logger', JustLog.LEVEL_INFO,
     /**
      * The original stream is exposed via the stream object
      */
-    new EasyLogConsoleStream({messageFormatter: (level, name, message, time, args, stream) => {
+    new JustLogConsoleStream({messageFormatter: (level, name, message, time, args, stream) => {
         return stream.color
             .yellow().append(`{${stream.dateFormatter(time)}} [${stream.levels[level]}, ${name}] ${message}`).reset().str;
     }}));

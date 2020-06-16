@@ -1,52 +1,52 @@
 
-# EasyLog.js
-EasyLog.js is a fully open source logger for JavaScript and Node.js projects.
+# JustLog.js
+JustLog.js is a fully open source logger for JavaScript and Node.js projects.
 It comes without any external dependencies and is easy to use and extend.
 
 ## Installation
 
 ### NPM
 ```
-npm install EasyLog.js
+npm install justlog.js
 ```
 
 ## Usage  (Node.js)
 
-EasyLog supports CommonJS and ES6 module style imports.
+JustLog supports CommonJS and ES6 module style imports.
 
 ### ES6 modules
 ```js
-import {EasyLog} from 'easylog';
+import {JustLog} from 'justlog.js';
 
 /**
  * Creates a new logger to console
  */
-let logger = new EasyLog('My Logger', EasyLog.LEVEL_WARNING);
+let logger = new JustLog('My Logger', JustLog.LEVEL_WARNING);
 logger.warning('This is a warning!');
 ```
 ### CommonJS
 ```js
 
-let EasyLog = require('easylog').EasyLog;
+let JustLog = require('justlog.js').JustLog;
 
 /**
  * Creates a new logger to console
  */
-let logger = new EasyLog('My Logger', EasyLog.LEVEL_WARNING);
+let logger = new JustLog('My Logger', JustLog.LEVEL_WARNING);
 logger.warning('This is a warning!');
 ```
 
 ## Usage (Browser)
 
-EasyLog can also be included in the browser with the pre-built minified scripts.
+JustLog can also be included in the browser with the pre-built minified scripts.
 ```html
-<script src="./dist/easylog.main.min.js"></script>
+<script src="./dist/justlog.main.min.js"></script>
 <script>
   /**
   * Create a logger without color
   */
-  const logger = new easylog.EasyLog('My Loggger', easylog.EasyLog.LEVEL_INFO,
-      new easylog.EasyLogConsoleStream({color: false}));
+  const logger = new justlog.JustLog('My Loggger', justlog.JustLog.LEVEL_INFO,
+      new justlog.JustLogConsoleStream({color: false}));
 
   // debug should not output anything
   logger.warning('This is a warning!');
@@ -61,7 +61,7 @@ See the examples folder for full examples.
 Some of the following commands may require you to install the development dependencies.
 
 ### Documentation
-The JSDocs can be found [here](https://krickl.dev/easylog/index.html).
+The JSDocs can be found [here](https://krickl.dev/justlog/index.html).
 
 To build the documentation yourself run
 ```
@@ -89,7 +89,7 @@ npm run lint
 
 
 ## License
-EasyLog.js is licensed under the MIT license.
+JustLog.js is licensed under the MIT license.
 
 
 

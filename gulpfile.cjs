@@ -24,7 +24,7 @@ gulp.task('test', () => {
 
 gulp.task('dist', () => {
     return gulp.src([
-        './src/easylog.js'
+        './src/justlog.js'
     ])
     .pipe(sourcemaps.init())
     .pipe(webpack({
@@ -32,8 +32,8 @@ gulp.task('dist', () => {
         name: '.',
         mode: 'production',
         output: {
-            filename: 'easylog.[name].min.js',
-            library: 'easylog',
+            filename: 'justlog.[name].min.js',
+            library: 'justlog',
             libraryTarget: 'var',
         },
         devtool: "source-map"
@@ -43,7 +43,7 @@ gulp.task('dist', () => {
 
 gulp.task('dev', () => {
     return gulp.src([
-        './src/easylog.js'
+        './src/justlog.js'
     ])
     .pipe(sourcemaps.init())
     .pipe(webpack({
@@ -51,8 +51,8 @@ gulp.task('dev', () => {
         name: '.',
         mode: 'development',
         output: {
-            filename: 'easylog.[name].js',
-            library: 'easylog',
+            filename: 'justlog.[name].js',
+            library: 'justlog',
             libraryTarget: 'var',
         },
         devtool: "source-map"

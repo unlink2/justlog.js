@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { EasyLogStream, ColorString, EasyLog } from '../src/wrapper.mjs';
+import { JustLogStream, ColorString, JustLog } from '../src/wrapper.mjs';
 
 describe('ColorString', () => {
     describe('String chaining', () => {
@@ -75,16 +75,16 @@ describe('ColorString', () => {
 describe('Stream', () => {
     describe('Mock stream', () => {
         it('should listen to all levels', () => {
-            let b = new EasyLogStream();
-            b.write(EasyLog.LEVEL_INFO, 'test', 'message', new Date(0));
+            let b = new JustLogStream();
+            b.write(JustLog.LEVEL_INFO, 'test', 'message', new Date(0));
             assert.equal(b.output, '\x1B[0m\x1B[37mThu, 01 Jan 1970 00:00:00 GMT [info] [test] message\x1B[0m');
 
-            b.write(EasyLog.LEVEL_FATAL, 'test', 'fatal', new Date(1));
+            b.write(JustLog.LEVEL_FATAL, 'test', 'fatal', new Date(1));
             assert.equal(b.output, '\x1B[0m\x1B[41m\x1B[1mThu, 01 Jan 1970 00:00:00 GMT [fatal] [test] fatal\x1B[0m');
         });
 
         it('Should use custom date formatters', () => {
-            let b = new EasyLogStream({dateFormatter: (time, stream) => {
+            let b = new JustLogStream({dateFormatter: (time, stream) => {
                 assert.equal(stream, b);
                 return 'My fancy date formatter';
             }});
@@ -94,7 +94,7 @@ describe('Stream', () => {
         });
 
         it('Should use a custom message formatter', () => {
-            let b = new EasyLogStream({messageFormatter: (level, name, message, time, args, stream) => {
+            let b = new JustLogStream({messageFormatter: (level, name, message, time, args, stream) => {
                 assert.equal(stream, b);
                 assert.equal(typeof args, 'object');
                 assert.equal(args.length, 1);
@@ -111,13 +111,13 @@ describe('Stream', () => {
 describe('Logger', () => {
     describe('Logger with mock stream', () => {
         it('Should not log levels below the current level', () => {
-            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({color: false}));
+            let l = new JustLog('name', JustLog.LEVEL_ERROR, new JustLogStream({color: false}));
             // should not log these
-            for (let i = EasyLog.LEVEL_INFO; i < EasyLog.LEVEL_ERROR; i++) {
+            for (let i = JustLog.LEVEL_INFO; i < JustLog.LEVEL_ERROR; i++) {
                 assert(!l.isMinLevel(i));
             }
             // should log these levels
-            for (let i = EasyLog.LEVEL_ERROR; i <= EasyLog.LEVEL_DEBUG; i++)  {
+            for (let i = JustLog.LEVEL_ERROR; i <= JustLog.LEVEL_DEBUG; i++)  {
                 assert(l.isMinLevel(i));
             }
             // test output
@@ -137,8 +137,8 @@ describe('Logger', () => {
         });
 
         it('Should write to all streams', () => {
-            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({color: false}));
-            l.addStream(new EasyLogStream({color: false})); // second stream
+            let l = new JustLog('name', JustLog.LEVEL_ERROR, new JustLogStream({color: false}));
+            l.addStream(new JustLogStream({color: false})); // second stream
             l.error('test');
             assert.notEqual(l.streams[0].output, '');
             assert.equal(l.streams[1].output, l.streams[0].output);
@@ -147,7 +147,7 @@ describe('Logger', () => {
         });
 
         it('Should pretty print Objects', () => {
-            let l = new EasyLog('name', EasyLog.LEVEL_ERROR, new EasyLogStream({dateFormatter: () => {return '';}}),
+            let l = new JustLog('name', JustLog.LEVEL_ERROR, new JustLogStream({dateFormatter: () => {return '';}}),
                 {prettyPrintSpace: 0});
             l.error('Test', {value: 255});
             assert.equal(l.streams[0].output, '\x1B[0m\x1B[31m [error] [name]  Test {"value":255}\x1B[0m');

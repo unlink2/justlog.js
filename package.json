@@ -1,17 +1,17 @@
 {
-  "name": "easylog.js",
+  "name": "justlog.js",
   "version": "0.1.0",
-  "description": "Easylog is a simple logging framework without runtime devDependencies for node.js and the browser.",
-  "main": "./src/easylog.js",
+  "description": "JustLog is a simple logging framework without runtime devDependencies for node.js and the browser.",
+  "main": "./src/justlog.js",
   "module": "./src/wrapper.js",
   "exports": {
     "import": "./src/wrapper.mjs",
-    "require": "./src/easylog.js"
+    "require": "./src/justlog.js"
   },
   "scripts": {
     "test": "mocha --reporter spec",
     "lint": "npx eslint ./src/*",
-    "docs": "npx jsdoc ./src/easylog.js -d ./docs -R README.md",
+    "docs": "npx jsdoc ./src/justlog.js -d ./docs -R README.md",
     "dist": "npx gulp -f gulpfile.cjs dev dist"
   },
   "keywords": [

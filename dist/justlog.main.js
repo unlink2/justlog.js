@@ -1,4 +1,4 @@
-var easylog =
+var justlog =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,14 +82,14 @@ var easylog =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/easylog.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/justlog.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/easylog.js":
+/***/ "./src/justlog.js":
 /*!************************!*\
-  !*** ./src/easylog.js ***!
+  !*** ./src/justlog.js ***!
   \************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
@@ -323,7 +323,7 @@ ColorString.termColors = {
 /**
  * @callback StreamDateFormatter
  * @param {Date} time The current time
- * @param {EasyLogStream} stream The calling stream
+ * @param {JustLogStream} stream The calling stream
  * @return {String} The formatted date string
  */
 
@@ -334,7 +334,7 @@ ColorString.termColors = {
  * @param {String} message The actual log message
  * @param {Date} time Time (defaults to current time)
  * @param {Array} args The argument objects
- * @param {EasyLogStream} stream The calling stream
+ * @param {JustLogStream} stream The calling stream
  * @return {String} The formatted message
  */
 
@@ -349,11 +349,11 @@ ColorString.termColors = {
 
 
 /**
- * @class EasyLogStream
+ * @class JustLogStream
  * Base class for streams.
  * Use it as a base to create your own logger output stream.
  */
-class EasyLogStream {
+class JustLogStream {
     /**
      * @constructor
      * @param {StreamOptions} options The options object.
@@ -373,19 +373,19 @@ class EasyLogStream {
     colorPicker(level) {
         // choose color
         switch (level) {
-            case EasyLog.LEVEL_INFO:
+            case JustLog.LEVEL_INFO:
                 this.color.white();
                 break;
-            case EasyLog.LEVEL_WARNING:
+            case JustLog.LEVEL_WARNING:
                 this.color.yellow();
                 break;
-            case EasyLog.LEVEL_ERROR:
+            case JustLog.LEVEL_ERROR:
                 this.color.red(false);
                 break;
-            case EasyLog.LEVEL_CRITICAL:
+            case JustLog.LEVEL_CRITICAL:
                 this.color.red(true);
                 break;
-            case EasyLog.LEVEL_FATAL:
+            case JustLog.LEVEL_FATAL:
                 this.color.red(true);
                 this.color.bright();
                 break;
@@ -451,9 +451,9 @@ class EasyLogStream {
 }
 
 /**
- * @class EasyLogConsoleStream Console output logger
+ * @class JustLogConsoleStream Console output logger
  */
-class EasyLogConsoleStream extends EasyLogStream {
+class JustLogConsoleStream extends JustLogStream {
     /**
      * @constructor
      * @param {StreamOptions} options The options object.
@@ -473,9 +473,9 @@ class EasyLogConsoleStream extends EasyLogStream {
      */
     write(level, name, message, time=new Date(), args=[]) {
         super.write(level, name, message, time, args);
-        if (level < EasyLog.LEVEL_WARNING) {
+        if (level < JustLog.LEVEL_WARNING) {
             console.log(this.output);
-        } else if (level < EasyLog.LEVEL_ERROR) {
+        } else if (level < JustLog.LEVEL_ERROR) {
             console.warn(this.output);
         } else {
             console.error(this.output);
@@ -486,22 +486,22 @@ class EasyLogConsoleStream extends EasyLogStream {
 }
 
 /**
- * @typedef {Object} EasyLogOptions
+ * @typedef {Object} JustLogOptions
  * @property {Number} prettyPrintSpace Space for JSON pretty printing
  */
 
 /**
- * @class EasyLog Logger class
+ * @class JustLog Logger class
  */
-class EasyLog {
+class JustLog {
     /**
      * @constructor
      * @param {string} name The name of the logger
      * @param {Number} minLevel The current log level
-     * @param {EasyLogStream} stream The output stream for the logger. Must be a subclass of EasyLogStreamBase
-     * @param {EasyLogOptions} options Other options
+     * @param {JustLogStream} stream The output stream for the logger. Must be a subclass of JustLogStreamBase
+     * @param {JustLogOptions} options Other options
      */
-    constructor(name, minLevel=EasyLog.LEVEL_ERROR, stream=new EasyLogConsoleStream(), options={}) {
+    constructor(name, minLevel=JustLog.LEVEL_ERROR, stream=new JustLogConsoleStream(), options={}) {
         this.name = name;
         this.minLevel = minLevel;
         this.streams = [stream];
@@ -552,20 +552,20 @@ class EasyLog {
     /**
      * Outputs info log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     info() {
-        this. output(EasyLog.LEVEL_INFO, arguments);
+        this. output(JustLog.LEVEL_INFO, arguments);
         return this;
     }
 
     /**
      * Outputs warning log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     warning() {
-        this.output(EasyLog.LEVEL_WARNING, arguments);
+        this.output(JustLog.LEVEL_WARNING, arguments);
         return this;
     }
 
@@ -573,30 +573,30 @@ class EasyLog {
     /**
      * Outputs error log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     error() {
-        this.output(EasyLog.LEVEL_ERROR, arguments);
+        this.output(JustLog.LEVEL_ERROR, arguments);
         return this;
     }
 
     /**
      * Outputs ciritcal log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     crit() {
-        this.output(EasyLog.LEVEL_CRITICAL, arguments);
+        this.output(JustLog.LEVEL_CRITICAL, arguments);
         return this;
     }
 
     /**
      * Outputs fatal log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     fatal() {
-        this.output(EasyLog.LEVEL_FATAL, arguments);
+        this.output(JustLog.LEVEL_FATAL, arguments);
         return this;
     }
 
@@ -604,42 +604,42 @@ class EasyLog {
     /**
      * Outputs debug log level
      * @param {String} message The message
-     * @return {EasyLog}
+     * @return {JustLog}
      */
     debug() {
-        this.output(EasyLog.LEVEL_DEBUG, arguments);
+        this.output(JustLog.LEVEL_DEBUG, arguments);
         return this;
     }
 }
 /**
  * {Number} LEVEL_DEBUG Debug log level
  */
-EasyLog.LEVEL_DEBUG = 0;
+JustLog.LEVEL_DEBUG = 0;
 /**
  * {Number} LEVEL_INFO Info log level
  */
-EasyLog.LEVEL_INFO = 1;
+JustLog.LEVEL_INFO = 1;
 /**
  * {Number} LEVEL_WARNING Warning log level
  */
-EasyLog.LEVEL_WARNING = 2;
+JustLog.LEVEL_WARNING = 2;
 /**
  * {Number} LEVEL_ERROR Error log level
  */
-EasyLog.LEVEL_ERROR = 3;
+JustLog.LEVEL_ERROR = 3;
 /**
  * {Number} LEVEL_CRITICAL Ciritcal log level
  */
-EasyLog.LEVEL_CRITICAL = 4;
+JustLog.LEVEL_CRITICAL = 4;
 /**
  * {Number} LEVEL_FATAL Fatal log level
  */
-EasyLog.LEVEL_FATAL = 5;
+JustLog.LEVEL_FATAL = 5;
 
-module.exports = {ColorString, EasyLog, EasyLogConsoleStream, EasyLogStream};
+module.exports = {ColorString, JustLog, JustLogConsoleStream, JustLogStream};
 
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=easylog.main.js.map
+//# sourceMappingURL=justlog.main.js.map
